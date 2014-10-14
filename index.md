@@ -233,43 +233,46 @@ SimpleFrameAnimator.h
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   class SimpleFrameAnimatedCharacterController : public CharacterController
   {
           private:
-  
-  
+   
+   
               FrameAnimator *frameAnimator;
-  
-  
+   
+   
               …
-  
-  
+   
+   
           public:
-  
-  
+   
+   
               …
-  
-  
+   
+   
           void Preprocess(void) override;
           void Move(void) override;
-  
-  
+   
+   
           Model *GetTargetNode(void) const
           {
               return static_cast(CharacterController::GetTargetNode());
           }
-  
-  
+   
+   
           …
   };
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -281,17 +284,17 @@ SimpleFrameAnimator.cpp
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   void SimpleFrameAnimatedCharacterController::Preprocess(void)
   {
       CharacterController::Preprocess();
       frameAnimator = new FrameAnimator(GetTargetNode());
       GetTargetNode()->SetRootAnimator(frameAnimator);
-  
-  
+   
+   
       // Setup the frame animator to play the animation defined by the
       // "TechTrooper/Run" animation resource file. Then setup the frame
       // interpolator to play the animation forward and loop.
@@ -299,19 +302,22 @@ SimpleFrameAnimator.cpp
       frameAnimator->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
   }  
-  
-  
+   
+   
   void SimpleFrameAnimatedCharacterController::Move(void)
   {
       CharacterController::Move();
-  
-  
+   
+   
       GetTargetNode()->Animate();
   }
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -412,25 +418,28 @@ SimpleBlendAnimator.h
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   class SimpleBlendAnimatedCharacterController : public CharacterController
   {
       private:
-  
-  
+   
+   
           BlendAnimator *blendAnimator;
           FrameAnimator *frameAnimators[2];
-  
-  
+   
+   
       …
   };
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -442,62 +451,65 @@ SimpleBlendAnimator.cpp
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   void SimpleBlendAnimatedCharacterController::Preprocess(void)
   {
       static const float interpolationTime = 5000.0F; // 5000 ms (i.e. 5 seconds)
-  
-  
+   
+   
       CharacterController::Preprocess();
-  
-  
+   
+   
       // Setup the first frame animator to play "TechTrooper/Idle", forward and
       // looping.
       frameAnimators[0] = new FrameAnimator(GetTargetNode());
       frameAnimators[0]->SetAnimation("TechTrooper/Idle");
       frameAnimators[0]->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // Setup the second frame animator to play "TechTrooper/Run", forward and
       // looping.
       frameAnimators[1] = new FrameAnimator(GetTargetNode());
       frameAnimators[1]->SetAnimation("TechTrooper/Run");
       frameAnimators[1]->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // Create a new blend animator and add the two frame animators as
       // sub-animators.
       blendAnimator = new BlendAnimator(GetTargetNode());
       blendAnimator->AddNewSubnode(frameAnimators[0]);
       blendAnimator->AddNewSubnode(frameAnimators[1]);
-  
-  
+   
+   
       // Setup our frame animators weight interpolators for use with the blend
       // animator, causing the final animation to interpolate back and forth between
       // our idle and run animators.
       frameAnimators[0]->GetWeightInterpolator()->SetRange(0.0F, 1.0F);
       frameAnimators[0]->GetWeightInterpolator()->Set(0.0F, 1.0F / interpolationTime,
           kInterpolatorForward | kInterpolatorLoop | kInterpolatorOscillate);
-  
-  
+   
+   
       frameAnimators[1]->GetWeightInterpolator()->SetRange(0.0F, 1.0F);
       frameAnimators[1]->GetWeightInterpolator()->Set(1.0F, 1.0F / interpolationTime,
           kInterpolatorBackward | kInterpolatorLoop | kInterpolatorOscillate);
-  
-  
+   
+   
       // We want the model to receive output from the blend animator. So we set
       // the model's root animator to be the blend animator.
       GetTargetNode()->SetRootAnimator(blendAnimator);
   }
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -596,25 +608,28 @@ SimpleMergeAnimator.h
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   class SimpleMergeAnimatedCharacterController : public CharacterController
   {
       private:
-  
-  
+   
+   
           MergeAnimator *mergeAnimator;
           FrameAnimator *frameAnimators[2];
-  
-  
+   
+   
       …
   };
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -626,23 +641,23 @@ SimpleMergeAnimator.cpp
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   void SimpleMergeAnimatedCharacterController::Preprocess(void)
   {
       CharacterController::Preprocess();
-  
-  
+   
+   
       // Setup the first frame animator to play "TechTrooper/Run", forward and
       // looping.
       frameAnimators[0] = new FrameAnimator(GetTargetNode());
       frameAnimators[0]->SetAnimation("TechTrooper/Run");
       frameAnimators[0]->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // Setup the second frame animator to play "TechTrooper/GunShoot", forward
       // and looping on the model's upper body.
       frameAnimators[1] = new FrameAnimator(GetTargetNode(), GetTargetNode()->FindNode(
@@ -650,22 +665,25 @@ SimpleMergeAnimator.cpp
       frameAnimators[1]->SetAnimation("TechTrooper/GunShoot");
       frameAnimators[1]->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // Create a new merge animator and add the two frame animators as sub-animators.
       mergeAnimator = new MergeAnimator(GetTargetNode());
       mergeAnimator->AddNewSubnode(frameAnimators[0]);
       mergeAnimator->AddNewSubnode(frameAnimators[1]);
-  
-  
+   
+   
       // We want the character to receive output from the merge animator. So we set
       // the model's root animator to be the merge animator.
       GetTargetNode()->SetRootAnimator(mergeAnimator);
   }
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
 The key bit of code to note in this sample is, that when calling the constructor for our second frame animator, we have not accepted the default value of **nullptr** for the **Node \*node** parameter. Instead we have passed in a pointer to a node, or more specifically a **Bone** , that we found in the target model's node hierarchy by calling **FindNode(unsigned\_int32 hash)** and passing it a hash of the bone's name.
 
@@ -850,31 +868,34 @@ SimpleAnimatorTree.h
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   class SimpleAnimatedCharacterController : public CharacterController
   {
       private:
-  
-  
+   
+   
           MergeAnimator *mergeAnimator;
-  
-  
+   
+   
           BlendAnimator *blendAnimator;
           FrameAnimator *frameAnimators[2];
-  
-  
+   
+   
           FrameAnimator *upperBodyAnimator;
-  
-  
+   
+   
       …
   };
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -886,18 +907,18 @@ SimpleAnimatorTree.cpp
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   void SimpleAnimatedCharacterController::Preprocess(void)
   {
       static const float interpolationTime = 5000.0F; // 5000 ms (i.e. 5 seconds)
-  
-  
+   
+   
       CharacterController::Preprocess();
-  
-  
+   
+   
       // Setup the first frame animator to play "TechTrooper/Idle", forward and
       // looping.
       frameAnimators[0] = new FrameAnimator(GetTargetNode());
@@ -905,8 +926,8 @@ SimpleAnimatorTree.cpp
       frameAnimators[0]->GetWeightInterpolator()->SetValue(0.0f);
       frameAnimators[0]->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // Setup the second frame animator to play "TechTrooper/Run", forward and
       // looping.
       frameAnimators[1] = new FrameAnimator(GetTargetNode());
@@ -914,26 +935,26 @@ SimpleAnimatorTree.cpp
       frameAnimators[1]->GetWeightInterpolator()->SetValue(1.0f);
       frameAnimators[1]->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // Setup our blend animator to interpolate back and forth between our idle and
       // run animators.
       frameAnimators[0]->GetWeightInterpolator()->SetRange(0.0F, 1.0F);
       frameAnimators[0]->GetWeightInterpolator()->Set(0.0F, 1.0F / interpolationTime,
           kInterpolatorForward | kInterpolatorLoop | kInterpolatorOscillate);
-  
-  
+   
+   
       frameAnimators[1]->GetWeightInterpolator()->SetRange(0.0F, 1.0F);
       frameAnimators[1]->GetWeightInterpolator()->Set(1.0F, 1.0F / interpolationTime,
           kInterpolatorBackward | kInterpolatorLoop | kInterpolatorOscillate);
-  
-  
+   
+   
       // Create a new blend animator and add the two frame animators as sub-animators.
       blendAnimator = new BlendAnimator(GetTargetNode());
       blendAnimator->AddNewSubnode(frameAnimators[0]);
       blendAnimator->AddNewSubnode(frameAnimators[1]);
-  
-  
+   
+   
       // Setup the second frame animator to play "TechTrooper/GunShoot", forward
       // and looping on the model's upper body.
       upperBodyAnimator = new FrameAnimator(GetTargetNode(), GetTargetNode()->FindNode(
@@ -941,22 +962,25 @@ SimpleAnimatorTree.cpp
       upperBodyAnimator->SetAnimation("TechTrooper/GunShoot");
       upperBodyAnimator->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // Create a new merge animator and add the two frame animators as sub-animators.
       mergeAnimator = new MergeAnimator(GetTargetNode());
       mergeAnimator->AddNewSubnode(blendAnimator);
       mergeAnimator->AddNewSubnode(upperBodyAnimator);
-  
-  
+   
+   
       // We want the character to receive output from the merge animator. So we set
       // the model's root animator to be the blend animator.
       GetTargetNode()->SetRootAnimator(mergeAnimator);
   }
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -1069,15 +1093,15 @@ SimpleDynamicAnimation.h
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   class SimpleDynamicAnimatedCharacterController : public CharacterController
   {
       private:
-  
-  
+   
+   
           // The following enum uniquely identifies the different animations
           // that our controller could ask our frame animators to play.
           enum
@@ -1086,24 +1110,24 @@ SimpleDynamicAnimation.h
               kAnimationRunForward,
               kAnimationRunBackward
           };
-  
-  
+   
+   
           BlendAnimator *blendAnimator;
           FrameAnimator *frameAnimators[2];
-  
-  
+   
+   
           // We're going to be swapping back and forth between the two frame
           // animators. So we need an extra pointer to keep track of which is
           // the current "active" animator.
           FrameAnimator *activeAnimator;
-  
-  
+   
+   
           // We're also going to be changing between three different
           // animations. As such we're going to need to keep track of the
           // current "active" animation.
           int32 activeAnimation;
-  
-  
+   
+   
           // For the sake of simplicity, we're just going to use two booleans
           // to indicate if a SimpleDynamicAnimatedCharacterController is
           // attempting to run forward and/or run backward. If we had a lot more
@@ -1112,36 +1136,36 @@ SimpleDynamicAnimation.h
           // a lot more sense.
           bool runningForward;
           bool runningBackward;
-  
-  
+   
+   
           …
-  
-  
+   
+   
           void PlayAnimation(int animation);
-  
-  
+   
+   
       public:
-  
-  
+   
+   
           …
-  
-  
+   
+   
           void SetRunningForward(bool runningForward)
           {
               this->runningForward = runningForward;
           }
-  
-  
+   
+   
           void SetRunningBackward(bool runningBackward)
           {
               this->runningBackward = runningBackward;
           }
-  
-  
+   
+   
           …
   };
-  
-  
+   
+   
   enum
   {
       // By default, the 'W' key is mapped to 'frwd' in Data/Engine/input.cfg.
@@ -1149,35 +1173,38 @@ SimpleDynamicAnimation.h
       // Also, by default, the 'S' key is mapped to 'bkwd'.
       kActionBackward = 'bkwd'
   };
-  
-  
+   
+   
   // This Action sub-class is used to define custom behaviour in response to user
   // input.
-  
-  
+   
+   
   class RunAction : public Action
   {
       private:
-  
-  
+   
+   
           SimpleDynamicAnimatedCharacterController *controller;
-  
-  
+   
+   
       public:
-  
-  
+   
+   
           RunAction(ActionType actionType,
               SimpleDynamicAnimatedCharacterController *controller);
           ~RunAction();
-  
-  
+   
+   
           void Begin(void) override;
           void End(void) override;
   };
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -1192,43 +1219,43 @@ SimpleDynamicAnimation.cpp
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   void SimpleDynamicAnimatedCharacterController::Preprocess(void)
   {
       CharacterController::Preprocess();
-  
-  
+   
+   
       // Setup the first frame animator to play "TechTrooper/Idle", forward and
       // looping.
       frameAnimators[0] = new FrameAnimator(GetTargetNode());
       frameAnimators[0]->SetAnimation("TechTrooper/Idle");
       frameAnimators[0]->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // The second frame animator's output won't be visible when the node/controller
       // first enters the world. As such, we'll just create it but won't set it up to
       // play an animation.
       frameAnimators[1] = new FrameAnimator(GetTargetNode());
-  
-  
+   
+   
       // Create a new blend animator and add the two frame animators as sub-animators.
       blendAnimator = new BlendAnimator(GetTargetNode());
       blendAnimator->AddNewSubnode(frameAnimators[0]);
       blendAnimator->AddNewSubnode(frameAnimators[1]);
-  
-  
+   
+   
       // We setup out first frame animator's weight interpolator to have a range of
       // [0.0F, 1.0F]. However, this time around we set the starting value to 1.0F
       // and set the mode as kInterpolatorStop. We've also set the rate to 0.0F,
       // however this is redundant as we've told the interpolator stop interpolating.
       frameAnimators[0]->GetWeightInterpolator()->SetRange(0.0F, 1.0F);
       frameAnimators[0]->GetWeightInterpolator()->Set(1.0F, 0.0F, kInterpolatorStop);
-  
-  
+   
+   
       // We setup the second frame animator's weight interpolator to have a range of
       // [0.0F, 1.0F], a intial value of 0.0F and to be stopped. This means that
       // unless we do something at run-time the second frame animator will never be
@@ -1236,36 +1263,36 @@ SimpleDynamicAnimation.cpp
       // haven't even set an animation for this frame animator to play back!
       frameAnimators[1]->GetWeightInterpolator()->SetRange(0.0F, 1.0F);
       frameAnimators[1]->GetWeightInterpolator()->Set(0.0F, 0.0F, kInterpolatorStop);
-  
-  
+   
+   
       // We want to keep track of the active animator, i.e. the one playing the most
       // recently started animation. At the moment that's the first frame animator,
       // as it's the only one we've told to play an animation at this point.
       activeAnimator = frameAnimators[0];
-  
-  
+   
+   
       // We also want to keep track of the active animation. Currently that's
       // "TechTrooper/Idle", which we're going refer to as kAnimationStand.  
       activeAnimation = kAnimationStand;
-  
-  
+   
+   
       // We want the model to receive output from the blend animator. So we set
       // the model's root animator to be the blend animator.
       GetTargetNode()->SetRootAnimator(blendAnimator);
   }
-  
-  
+   
+   
   void SimpleDynamicAnimatedCharacterController::Move(void)
   {
       CharacterController::Move();
-  
-  
+   
+   
       // This time around our controller has some truly dynamic behaviour. We need to
       // look at the runningForward and runningBackward booleans in order to determine
       // which animation should be played.
       int animation;
-  
-  
+   
+   
       // There are four possible states:
       //
       // 1. (runningForward && !runningBackward)
@@ -1292,24 +1319,24 @@ SimpleDynamicAnimation.cpp
           else
               animation = kAnimationStand;
       }
-  
-  
+   
+   
       // Now we don't want to go repeatedly playing the same animation over and
       // over. So we'll only call PlayAnimation(int animation) if activeAnimation
       // doesn't already equal the desired animation.
       if (activeAnimation != animation)
           PlayAnimation(animation);
-  
-  
+   
+   
       GetTargetNode()->Animate();
   }
-  
-  
+   
+   
   void SimpleDynamicAnimatedCharacterController::PlayAnimation(int animation)
   {
       static const float fadeTime = 500.0F; // 500 ms
-  
-  
+   
+   
       // We don't want to suddenly stop playing the current active animation. Instead
       // we're going to cause the active animation (played by the active animator) to
       // fade out, using its weight interpolator.
@@ -1319,16 +1346,16 @@ SimpleDynamicAnimation.cpp
       // loop. Once our animation fades out, we want it to stay faded out!
       activeAnimator->GetWeightInterpolator()->SetRate(1.0F / fadeTime);
       activeAnimator->GetWeightInterpolator()->SetMode(kInterpolatorBackward);
-  
-  
+   
+   
       // We want to play a new animation. So we need whichever frame animator that was
       // not the active animator, to become the new active animator.
       if (activeAnimator == frameAnimators[0])
           activeAnimator = frameAnimators[1];
       else
           activeAnimator = frameAnimators[0];
-  
-  
+   
+   
       // Make the new active animator play the appropriate animation resource.
       switch (animation)
       {
@@ -1338,16 +1365,16 @@ SimpleDynamicAnimation.cpp
           activeAnimator->GetFrameInterpolator()->SetMode(kInterpolatorForward |
               kInterpolatorLoop);
           break;
-  
-  
+   
+   
           case kAnimationRunForward:
           // Play "TechTrooper/Run" forward and loop.
           activeAnimator->SetAnimation("TechTrooper/Run");
           activeAnimator->GetFrameInterpolator()->SetMode(kInterpolatorForward |
               kInterpolatorLoop);
           break;
-  
-  
+   
+   
           case kAnimationRunBackward:
           // Play "TechTrooper/Walk" animation backward and loop.
           activeAnimator->SetAnimation("TechTrooper/Walk");
@@ -1355,21 +1382,21 @@ SimpleDynamicAnimation.cpp
               kInterpolatorLoop);
           break;
       }
-  
-  
+   
+   
       // We've already told the old active animator to fade out. But we also need to
       // tell the new active animator to fade in using its weight interpolator.
       activeAnimator->GetWeightInterpolator()->SetRate(1.0F / fadeTime);
       activeAnimator->GetWeightInterpolator()->SetMode(kInterpolatorForward);
-  
-  
+   
+   
       // We keep track of the last played animation using activeAnimation.
       activeAnimation = animation;
   }
-  
-  
-  
-  
+   
+   
+   
+   
   // We explictly call the super-class' constructor as we need to pass actionType
   // on to it. This is necessary so that the input manager can map this action to
   // particular control (or key), as defined in Data/Engine/input.cfg.
@@ -1380,15 +1407,15 @@ SimpleDynamicAnimation.cpp
       // that this action can call its instance methods.
       this->controller = controller;
   }
-  
-  
+   
+   
   // The RunAction destructor doesn't do anything, but always defining your
   // destructors is a good habit to get into.
   RunAction::~RunAction()
   {
   }
-  
-  
+   
+   
   // This method is called whenever the user triggers the RunAction, by pressing
   // down the button associated with the RunAction.
   void RunAction::Begin(void)
@@ -1405,15 +1432,15 @@ SimpleDynamicAnimation.cpp
           case kActionForward:
               controller->SetRunningForward(true);
               break;
-  
-  
+   
+   
           case kActionBackward:
               controller->SetRunningBackward(true);
               break;
       }
   }
-  
-  
+   
+   
   // This method is called whenever the user stops triggering the RunAction, by
   // releasing the associated button, after they had previously begun the action.
   void RunAction::End(void)
@@ -1428,17 +1455,20 @@ SimpleDynamicAnimation.cpp
           case kActionForward:
               controller->SetRunningForward(false);
               break;
-  
-  
+   
+   
           case kActionBackward:
               controller->SetRunningBackward(false);
               break;
       }
   }
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -1820,6 +1850,10 @@ C4's **Interpolator** class has built-in support for assigning callbacks to inte
 
 | _ **Note:** __As well as completion procedures, interpolators also support "loop procedures". These operate much in the same way as completion procedures but are called each time an interpolator loops instead when an interpolator stops/completes._ |
 | --- |
+ 
+ 
+ 
+ 
 
  
  
@@ -1834,6 +1868,10 @@ Completion procedure functionality is implemented in the **Interpolator** class 
 
 | **typedef**** void ****Interpolator::CompletionProc(Interpolator \*, void \*);** |
 | --- |
+ 
+ 
+ 
+ 
 
  
  
@@ -1848,6 +1886,10 @@ Some other class (typically a **Controller** sub-class) could declare a completi
 
 | **static**** void ****InterpolatorCompleted(Interpolator \*interpolator,**** void ****\*cookie);** |
 | --- |
+ 
+ 
+ 
+ 
 
  
  
@@ -1897,15 +1939,15 @@ SimpleDynamicAnimatorTree.h
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   class DynamicTreeAnimatedCharacterController : public CharacterController
   {
       private:
-  
-  
+   
+   
           // Unique animation identifiers.
           enum
           {
@@ -1913,42 +1955,45 @@ SimpleDynamicAnimatorTree.h
               kAnimationRunForward,
               kAnimationRunBackward
           };
-  
-  
+   
+   
           // We need to keep track of the active animation.
           int32 activeAnimation;
-  
-  
+   
+   
           // Booleans to indicate if a DynamicTreeAnimatedCharacterController is
           // attempting to run forward and/or run backward.
           bool runningForward;
           bool runningBackward;
-  
-  
+   
+   
           // We store an array of old animators, so they can be deleted when it
           // is safe.
           Array oldAnimators;
-  
-  
+   
+   
           static void WeightInterpolatorCompleted(Interpolator *interpolator,
               void *cookie);
-  
-  
+   
+   
           …
-  
-  
+   
+   
           void PlayAnimation(int animation);
-  
-  
+   
+   
       public:
-  
-  
+   
+   
           …
   };
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -1963,62 +2008,62 @@ SimpleDynamicAnimatorTree.cpp
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   void DynamicTreeAnimatedCharacterController::Preprocess(void)
   {
       static const float interpolationTime = 5000.0F; // 5000 ms (i.e. 5 seconds)
-  
-  
+   
+   
       CharacterController::Preprocess();
-  
-  
+   
+   
       // Initially we just want our animator tree to consist of a single frame
       // animator playing the "TechTrooper/Idle" animation.
       FrameAnimator *frameAnimator = new FrameAnimator(GetTargetNode());
-  
-  
+   
+   
       frameAnimator->SetAnimation("TechTrooper/Idle");
       frameAnimator->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       frameAnimator->GetWeightInterpolator()->SetRange(0.0F, 1.0F);
       frameAnimator->GetWeightInterpolator()->Set(1.0F, 0.0F, kInterpolatorStop);
-  
-  
+   
+   
       GetTargetNode()->SetRootAnimator(frameAnimator);
-  
-  
+   
+   
       // Keep track of the active animation.
       activeAnimation = kAnimationStand;
   }
-  
-  
+   
+   
   void DynamicTreeAnimatedCharacterController::Move(void)
   {
       CharacterController::Move();
-  
-  
+   
+   
       // We maintain an array of old (unused) animators so that they can safely be
       // deleted here in DynamicTreeAnimatedCharacterController::Move().
-  
-  
+   
+   
       for (int32 i = 0; i < oldAnimators.GetElementCount(); i++)
           delete oldAnimators[i];
-  
-  
+   
+   
       oldAnimators.Purge();
-  
-  
+   
+   
       // This time around our controller has some truly dynamic behaviour. We need to
       // look at the runningForward and runningBackward booleans in order to determine
       // which animation should be played.
       int animation;
-  
-  
+   
+   
       // Determine which animation should be played depending on runningForward and
       // runningBackward.
       if (runningForward)
@@ -2035,27 +2080,27 @@ SimpleDynamicAnimatorTree.cpp
           else
               animation = kAnimationStand;
       }
-  
-  
+   
+   
       // Only play the animation if we're not already playing it.
       if (activeAnimation != animation)
           PlayAnimation(animation);
-  
-  
+   
+   
       GetTargetNode()->Animate();
   }
-  
-  
+   
+   
   void DynamicTreeAnimatedCharacterController::PlayAnimation(int animation)
   {
       static const float fadeTime = 500.0F; // 500 ms
-  
-  
+   
+   
       // Each time we play a new animation we're going to create a new frame animator
       // to play the new animation.
       FrameAnimator *frameAnimator = new FrameAnimator(GetTargetNode());
-  
-  
+   
+   
       switch (animation)
       {
           case kAnimationStand:
@@ -2064,16 +2109,16 @@ SimpleDynamicAnimatorTree.cpp
               frameAnimator->GetFrameInterpolator()->SetMode(kInterpolatorForward |
                   kInterpolatorLoop);
               break;
-  
-  
+   
+   
           case kAnimationRunForward:
               // Play "TechTrooper/Run" forward and loop.
               frameAnimator->SetAnimation("TechTrooper/Run");
               frameAnimator->GetFrameInterpolator()->SetMode(kInterpolatorForward |
                   kInterpolatorLoop);
               break;
-  
-  
+   
+   
           case kAnimationRunBackward:
               // Play "TechTrooper/Walk" animation backward and loop.
               frameAnimator->SetAnimation("TechTrooper/Walk");
@@ -2081,80 +2126,80 @@ SimpleDynamicAnimatorTree.cpp
                   kInterpolatorLoop);
               break;
       }
-  
-  
+   
+   
       // Fade in.
       frameAnimator->GetWeightInterpolator()->Set(0.0F, 1.0F / fadeTime,
           kInterpolatorForward);
-  
-  
+   
+   
       // In order for this new frame animator to fade in we need to blend it with the
       // existing animator tree. As such we'll create a new blend animator and add
       // the existing root animator and our new frame animator as sub-animators.
       BlendAnimator *blendAnimator = new BlendAnimator(GetTargetNode());
-  
-  
+   
+   
       // We use AddSubnode(Node *node) for the existing (soon to be old) root animator
       // as we don't want Preprocess() to be called again.
       Animator *oldRootAnimator = GetTargetNode()->GetRootAnimator();
-  
-  
+   
+   
       blendAnimator->AddNewSubnode(frameAnimator);
       blendAnimator->AddSubnode(oldRootAnimator);
-  
-  
+   
+   
       // We want all the existing animations to fade out, so we setup the old root
       // animator's weight interpolator to fade out.
       oldRootAnimator->GetWeightInterpolator()->Set(1.0F, 1.0F / fadeTime,
           kInterpolatorBackward);
-  
-  
+   
+   
       // When our weight interpolator finishes causing the animator to fade out we
       // want our completion procedure to be called. We pass a pointer to the
       // interpolator's animator as our user defined data (aka cookie).
       oldRootAnimator->GetWeightInterpolator()->SetCompletionProc(
           &DynamicTreeAnimatedCharacterController::WeightInterpolatorCompleted,
           oldRootAnimator);
-  
-  
+   
+   
       // Set our blend animator as the new root animator so that our target model
       // receives output from it.
       GetTargetNode()->SetRootAnimator(blendAnimator);
-  
-  
+   
+   
       // Update the last played (active) animation.
       activeAnimation = animation;
   }
-  
-  
-  
-  
+   
+   
+   
+   
   void DynamicTreeAnimatedCharacterController::WeightInterpolatorCompleted(
       Interpolator *interpolator, void *cookie)
   {
       // An animator has just finished fading out so we want to remove it from our
       // animator tree. However, we don't want to leave behind a blend animator with
       // just one sub-animator. As such we need to remove the parent blend animator.
-  
-  
+   
+   
       Animator *fadedOutAnimator = static_cast(cookie);
       BlendAnimator *blendAnimator = static_cast(
           fadedOutAnimator->GetSuperNode());
-  
-  
+   
+   
       // We want to replace the unneeded blend animator with the child animator which
       // has not faded out; the one that has technically "faded in".
       Animator *fadedInAnimator = blendAnimator->GetFirstSubnode();
       Model *model = blendAnimator->GetTargetModel();
-  
-  
+   
+   
       if (blendAnimator == model->GetRootAnimator())
       {
           // If the blend animator is the root animator then we can simply replace it
           // with the faded-in animator and we don't have to worry about any blending.
           model->SetRootAnimator(fadedInAnimator);
-  
-  
+   
+   
           // When you attach an animator to another parent animator it is
           // automatically removed from the old parent. However, this does not happen
           // automatically when you set an animator as the root animator. As such we
@@ -2169,32 +2214,32 @@ SimpleDynamicAnimatorTree.cpp
           // In which case we need to copy this blend animator's weight interpolator
           // value over to the faded-in animator, and tell it to fade out in the
           // same way the blend animator was.
-  
-  
+   
+   
           fadedInAnimator->GetWeightInterpolator()->Set(
               blendAnimator->GetWeightInterpolator()->GetValue(),
               blendAnimator->GetWeightInterpolator()->GetRate(),
               kInterpolatorBackward);
-  
-  
+   
+   
           // We'll also want the completion procedure to be called when the "faded-in
           // animator" finishes fading out.
           fadedInAnimator->GetWeightInterpolator()->SetCompletionProc(
               &DynamicTreeAnimatedCharacterController::WeightInterpolatorCompleted,
               fadedInAnimator);
-  
-  
+   
+   
           // Now all we need to do is remove the blend animator from its parent
           // animator and add the faded-in animator in its place.
-  
-  
+   
+   
           Animator *parentAnimator = blendAnimator->GetSuperNode();
-  
-  
+   
+   
           parentAnimator->RemoveSubnode(blendAnimator);
           parentAnimator->AddSubnode(fadedInAnimator);
-  
-  
+   
+   
           // Due to the way sub-animators are updated in C4, even though we've just
           // detached the blend animator from our animator tree, its Update() method
           // will still be called this frame. As such it's possible the blend
@@ -2203,26 +2248,29 @@ SimpleDynamicAnimatorTree.cpp
           // be called.
           blendAnimator->GetWeightInterpolator()->SetCompletionProc(nullptr, nullptr);
       }
-  
-  
+   
+   
       // When this method is called C4 is in the middle of executing some code on
       // the animators (and their iterators). As such we can't delete the blend
       // animator (or its sub-animator, the faded-out animator) just yet. Instead we
       // add them to the controller's oldAnimator array so they can be deleted safely
       // next time the controller's Move() method is called.
-  
-  
+   
+   
       DynamicTreeAnimatedCharacterController *controller =
           static_cast(
           model->GetController());
-  
-  
+   
+   
       controller->oldAnimators.AddElement(blendAnimator);
   }
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -2282,6 +2330,8 @@ Animation cues can be added to a previously imported animation by using the mode
 6. Slide the frame slider to the frame you wish to attach an animation cue to.
 7. From the top menu bar chose "Cue" → "Insert Cue...".
 8. Finally, enter a four character identifier for the cue and press "Ok". 
+ 
+ 
 
  
  
@@ -2346,35 +2396,38 @@ SimpleAnimationCues.h
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   class SimpleAnimationCueCharacterController : public CharacterController
   {
       private:
-  
-  
+   
+   
           FrameAnimator *frameAnimator;
           FrameAnimatorObserver
           frameAnimatorObserver;
-  
-  
+   
+   
           void HandleAnimationEvent(FrameAnimator *frameAnimator, CueType cueType);
-  
-  
+   
+   
           …
-  
-  
+   
+   
       public:
-  
-  
+   
+   
           …
   };
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -2395,25 +2448,25 @@ SimpleAnimationCues.cpp
 
  
  
-```
+```cpp
 …
-  
-  
+   
+   
   void SimpleAnimationCueCharacterController::HandleAnimationEvent(
       FrameAnimator *frameAnimator, CueType cueType)
   {
       static const char *stepSounds[4] = { "sound/step/Wood1", "sound/step/Wood2",
           "sound/step/Wood3", "sound/step/Wood4" };
-  
-  
+   
+   
       // The "TechTrooper/Run" animation has two animation cues with the 'STEP' cue
       // type.
       if (cueType == 'STEP')
       {
           // Randomly chose one sound from the four above.
           const char *randomSoundName = stepSounds[Math::Random(4)];
-  
-  
+   
+   
           // Create a omnidirectional sound source with a range of 25.0F and volume of
           // 0.15F
           OmniSource *source = new OmniSource(randomSoundName, 25.0F);
@@ -2426,42 +2479,45 @@ SimpleAnimationCues.cpp
           model->GetSuperNode()->AddNewSubnode(source);
       }
   }
-  
-  
+   
+   
   …
-  
-  
+   
+   
   void SimpleAnimationCueCharacterController::Preprocess(void)
   {
       CharacterController::Preprocess();
-  
-  
+   
+   
       frameAnimator = new FrameAnimator(GetTargetNode());
       GetTargetNode()->SetRootAnimator(frameAnimator);
-  
-  
+   
+   
       // Setup the frame animator to play the animation defined by the
       // "TechTrooper/Run" animation resource file. Then setup the frame interpolator
       // to play the animation forward and loop.
       frameAnimator->SetAnimation("TechTrooper/Run");
       frameAnimator->GetFrameInterpolator()->SetMode(kInterpolatorForward |
           kInterpolatorLoop);
-  
-  
+   
+   
       // Create a frame animator observer that has
       // SimpleAnimationCueCharacterController::HandleAnimationEvent() as the callback
       // method when an event occurs.
       frameAnimatorObserver =
           new FrameAnimatorObserver(this,
           &SimpleAnimationCueCharacterController::HandleAnimationEvent);
-  
-  
+   
+   
       frameAnimator->SetObserver(frameAnimatorObserver);
   }
-  
-  
+   
+   
   …
 ```
+
+ 
+ 
 
  
  
@@ -2593,7 +2649,9 @@ Whilst you should now have a good understanding of the pre-canned functionality 
 
  
  
-- This chapter and code: Copyright Benjamin Dobell. License terms to use code for commercial and non-commercial purposes is in the asset downloads section for the book. Please visit www.macktek.com.Tech Trooper model pack provided by Dexsoft Games: http://www.dexsoft-games.com/License for personal educational use only. Tech Trooper may not be distributed or sold without additional purchase from Dexsoft Games. The animations included with the Tech Trooper model were customized for this chapter. Full details of license and restrictions available with chapter assets. 
+- This chapter and code: Copyright Benjamin Dobell. License terms to use code for commercial and non-commercial purposes is in the asset downloads section for the book. Please visit www.macktek.com.Tech Trooper model pack provided by Dexsoft Games: http://www.dexsoft-games.com/License for personal educational use only. Tech Trooper may not be distributed or sold without additional purchase from Dexsoft Games. The animations included with the Tech Trooper model were customized for this chapter. Full details of license and restrictions available with chapter assets.  
+ 
+ 
 
  
  
