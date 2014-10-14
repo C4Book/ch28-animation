@@ -1,14 +1,7 @@
-###   
+---
+title: Chapter 28 - Animation
+---
 
-### **Chapter 28  
-  
-  
-**
-
-# **Animation  
-**
-
- 
  
 
  
@@ -261,17 +254,17 @@ SimpleFrameAnimator.h
               …
   
   
-              void Preprocess(void) override;
-              void Move(void) override;
+          void Preprocess(void) override;
+          void Move(void) override;
   
   
-              Model *GetTargetNode(void) const
-              {
-                  return static_cast(CharacterController::GetTargetNode());
-              }
+          Model *GetTargetNode(void) const
+          {
+              return static_cast(CharacterController::GetTargetNode());
+          }
   
   
-              …
+          …
   };
   
   
@@ -2608,3 +2601,10 @@ Whilst you should now have a good understanding of the pre-canned functionality 
  
  
 
+ 
+ 
+
+ 
+ 
+
+( This Page Is Intentionally Left Blank )
