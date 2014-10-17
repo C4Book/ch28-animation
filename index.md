@@ -1,66 +1,8 @@
 ---
 title: Chapter 28 - Animation
+author: Benjamin Dobell
+layout: page
 ---
-
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
-# **Animating Characters Programmatically in C4**
-
- 
- 
-
- 
- 
-
-**By Benjamin Dobell**
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
-
- 
- 
 
 **About This Chapter**
 
