@@ -1,6 +1,6 @@
-# Animating Characters Programatically in C4
+# Animating Characters Programmatically in C4
 
-This repository contains the text of my chapter "Animating Characters Programatically in C4" authored for the collaborative educational book, [C4 Engine 3D Game Editing & Programming](http://www.macktek.com/macktek/index.php/19-programming/c4-engine/71-new-book-c4-engine-3d-game-editing-programming-1st-edition) (ISBN-13: 978–0–9887436–0–1), and published by Macktek LLC in 2013.
+This repository contains the text of my chapter "Animating Characters Programmatically in C4" authored for the collaborative educational book, [C4 Engine 3D Game Editing & Programming](http://www.macktek.com/macktek/index.php/19-programming/c4-engine/71-new-book-c4-engine-3d-game-editing-programming-1st-edition) (ISBN-13: 978–0–9887436–0–1), and published by Macktek LLC in 2013.
 
 # Archival
 
